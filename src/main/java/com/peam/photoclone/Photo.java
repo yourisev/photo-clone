@@ -10,6 +10,7 @@ public class Photo {
     private String fileName;
 
     //raw data
+    private byte[] data;
 
 
     public Photo() {
@@ -34,5 +35,13 @@ public class Photo {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
     }
 }
