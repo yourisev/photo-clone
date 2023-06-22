@@ -1,21 +1,26 @@
-package com.peam.photoclone;
+package com.peam.photoclone.web;
 
+import com.peam.photoclone.service.PhotoService;
+import com.peam.photoclone.model.Photo;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
 
 @RestController
 public class PhotoController {
 
-    private Map<String, Photo> db = new HashMap<>(){{
-        put("1", new Photo("1","hello.jpg"));
-    }};
+    private final PhotoService photoService;
+
     //private List<Photo> db = List.of(new Photo("1", "hello.jpg"));
+
+
+    public PhotoController(PhotoService photoService) {
+        this.photoService = photoService;
+    }
 
     @GetMapping("/")
     public String hello(){
@@ -24,29 +29,25 @@ public class PhotoController {
 
     @GetMapping("/photos")
     public Collection<Photo> get(){
-        return db.values();
+        return photoService.findAll();
     }
 
     @GetMapping("/photo/{id}")
     public Photo get(@PathVariable String id){
-        Photo photo = db.get(id);
+        Photo photo = photoService.get(id);
         if(photo == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         return photo;
     }
 
     @DeleteMapping("/photo/{id}")
     public void delete(@PathVariable String id){
-        Photo photo = db.remove(id);
+        Photo photo = photoService.remove(id);
         if(photo == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/photo")
     public Photo create(@RequestPart("data") MultipartFile file) throws IOException {
-        Photo photo =new Photo();
-        photo.setId(UUID.randomUUID().toString());
-        photo.setFileName(file.getOriginalFilename());
-        photo.setData(file.getBytes());
-        db.put(photo.getId(),photo);
-        return photo;
+
+        return photoService.save(file.getOriginalFilename(), file.getContentType(), file.getBytes());
     }
 }

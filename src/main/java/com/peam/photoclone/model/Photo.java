@@ -1,4 +1,6 @@
-package com.peam.photoclone;
+package com.peam.photoclone.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -9,7 +11,10 @@ public class Photo {
     @NotEmpty
     private String fileName;
 
+    private String contentType;
+
     //raw data
+    @JsonIgnore
     private byte[] data;
 
 
@@ -43,5 +48,13 @@ public class Photo {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }
