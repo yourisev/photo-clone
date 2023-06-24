@@ -28,26 +28,24 @@ public class PhotoController {
     }
 
     @GetMapping("/photos")
-    public Collection<Photo> get(){
+    public Iterable<Photo> get(){
         return photoService.findAll();
     }
 
     @GetMapping("/photo/{id}")
-    public Photo get(@PathVariable String id){
+    public Photo get(@PathVariable Integer id){
         Photo photo = photoService.get(id);
         if(photo == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         return photo;
     }
 
     @DeleteMapping("/photo/{id}")
-    public void delete(@PathVariable String id){
-        Photo photo = photoService.remove(id);
-        if(photo == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    public void delete(@PathVariable Integer id){
+        photoService.remove(id);
     }
 
     @PostMapping("/photo")
     public Photo create(@RequestPart("data") MultipartFile file) throws IOException {
-
         return photoService.save(file.getOriginalFilename(), file.getContentType(), file.getBytes());
     }
 }
